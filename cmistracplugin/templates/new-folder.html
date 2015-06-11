@@ -1,0 +1,27 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="layout.html" />
+  <xi:include href="macros.html" />
+  <head>
+    <title>New folder</title>
+    <script type="text/javascript">
+      jQuery(document).ready(function($) {$("#name").get(0).focus()});
+    </script>
+  </head>
+  <body>
+    <div id="content" class="search">
+      <h1><label for="q">New folder</label></h1>
+      <form id="newfolder" action="${href.documents('newfolder')}" method="post">
+        <p>
+          <input type="text" id="name" name="name" size="40" />
+          <input type="hidden" name="parentId" value="${parentId}" />
+          <input type="submit" value="Create folder" />
+        </p>
+      </form>
+    </div>
+  </body>
+</html>

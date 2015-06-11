@@ -1,0 +1,15 @@
+<!--! Template for generating rows corresponding to directory entries -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:py="http://genshi.edgewall.org/"
+    xmlns:xi="http://www.w3.org/2001/XInclude" py:strip="">
+  <py:for each="idx in range(len(cmis_objects))">
+    <tr class="${idx % 2 and 'even' or 'odd'}">
+      <py:if test="cmis_objects[idx].getProperties()['cmis:objectTypeId'] == 'cmis:document'">
+        <xi:include href="document.html" />
+      </py:if>
+      <py:if test="cmis_objects[idx].getProperties()['cmis:objectTypeId']=='cmis:folder'">
+        <xi:include href="folder.html" />
+      </py:if>
+    </tr>
+  </py:for>
+</html>

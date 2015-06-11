@@ -1,0 +1,30 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="layout.html" />
+  <xi:include href="macros.html" />
+  <head>
+    <title>Upload document</title>
+  </head>
+  <body>
+    <div id="content" class="attachment">
+      <h1><label for="q">Upload document</label></h1>
+      <form action="${href.documents('upload')}" enctype="multipart/form-data" method="post" id="upload">
+          <div class="field">
+            <label>
+              Document (size limit ${max_size} KB):<br />
+              <input type="file" name="document" />
+            </label>
+          </div>
+          <div class="buttons">
+            <input type="hidden" name="parentId" value="${parentId}" />
+            <input type="submit" value="Upload document" />
+            <input type="submit" value="Cancel" name="cancel" />
+          </div>
+        </form>
+    </div>
+  </body>
+</html>

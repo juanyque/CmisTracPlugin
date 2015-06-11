@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://genshi.edgewall.org/" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="layout.html" />
+  <xi:include href="macros.html" />
+  <head>
+    <title>Alfresco Integration</title>
+  </head>
+  <body>
+    <div id="content" class="browser">
+      <h1>
+        <a href="${href.documents(rootFolder.getObjectId())}" title="Go to root folder" class="pathentry first">root</a>
+        <py:for each="idx in range(len(breadcrumb))">
+          <span class="pathentry sep">/</span><a href="${href.documents(breadcrumb[idx].getObjectId())}" title="View ${breadcrumb[idx].getName()}" class="pathentry">${breadcrumb[idx].getName()}</a>
+        </py:for>
+        <br style="clear: both;" />
+      </h1>
+      <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            /* browsers using old WebKits have issues with expandDir... */
+            var webkit_rev = /AppleWebKit\/(\d+)/.exec(navigator.userAgent);
+            if ( !webkit_rev || (521 - webkit_rev[1]).toString()[0] == "-" )
+              enableExpandDir(null, $("#dirlist tr"), null);
+        });
+      </script>
+      <py:if test="cmis_objectTypeId == 'cmis:folder'">
+        <table class="listing" id="dirlist">
+          <thead>
+            <tr>
+              <th class="name">Name</th>
+              <th class="size">Size</th>
+              <th class="date">Creation Date</th>
+              <th class="date">Modification Date</th>
+              <th class="name">Creator</th>
+            </tr>
+          </thead>
+          <tbody>
+            <py:if test="parentId">
+              <tr class="even">
+                <td class="name" colspan="5">
+                  <a class="parent" title="Parent Directory" href="${href.documents(parentId)}">../</a>
+                </td>
+              </tr>
+            </py:if>
+            <py:if test="len(cmis_objects) > 0">
+              <py:for each="idx in range(len(cmis_objects))">
+                <tr class="${idx % 2 and 'even' or 'odd'}">
+                  <py:if test="cmis_objects[idx].getProperties()['cmis:objectTypeId'] == 'cmis:document'">
+                    <xi:include href="document.html" />
+                  </py:if>
+                  <py:if test="cmis_objects[idx].getProperties()['cmis:objectTypeId']=='cmis:folder'">
+                    <xi:include href="folder.html" />
+                  </py:if>
+                </tr>
+              </py:for>
+            </py:if>
+            <py:if test="len(cmis_objects) == 0">
+              <tr class="even">
+                <td class="name" colspan="5">No files found</td>
+              </tr>
+            </py:if>
+          </tbody>
+        </table>
+      </py:if>
+      <py:if test="cmis_objectTypeId == 'cmis:document'">
+        <table summary="Document info" id="info">
+          <tbody>
+            <tr>
+              <th scope="col">${cmis_object.getName()}</th>
+            </tr>
+            <tr>
+              <td class="message searchable"></td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <ul class="props">
+                  <li>Property <strong>cmis:creationDate</strong> set to <em><code>${cmis_object.getProperties()['cmis:creationDate']}</code></em></li>
+                  <li>Property <strong>cmis:lastModificationDate</strong> set to <em><code>${cmis_object.getProperties()['cmis:lastModificationDate']}</code></em></li>
+                  <li>Property <strong>cmis:createdBy</strong> set to <em><code>${cmis_object.getProperties()['cmis:createdBy']}</code></em></li>
+                  <li>Property <strong>cmis:contentStreamMimeType</strong> set to <em><code>${cmis_object.getProperties()['cmis:contentStreamMimeType']}</code></em></li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+        <form id="remove-document" method="post" action="${href.documents('removedocument')}">
+          <div>
+            <input type="hidden" name="objectId" value="${cmis_object.getObjectId()}" />
+            <input type="submit" value="Delete document" />
+          </div>
+        </form>
+        <div id="altlinks">
+          <h3>Download in other formats:</h3>
+          <ul>
+            <li class="last"><a href="${href.documents(cmis_object.getObjectId(), 'download')}" rel="nofollow">Original Format</a></li>
+          </ul>
+        </div>
+      </py:if>
+    </div>
+  </body>
+</html>

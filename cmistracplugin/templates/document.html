@@ -1,0 +1,22 @@
+<!--! Template for generating rows corresponding to file entries -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:py="http://genshi.edgewall.org/"
+    xmlns:xi="http://www.w3.org/2001/XInclude" py:strip="">
+  <td class="name" py:choose="">
+    <!-- application/pdf -->
+    <a py:when="cmis_objects[idx].getProperties()['cmis:contentStreamMimeType'] == 'application/pdf'" class="file pdf" href="${href.documents(cmis_objects[idx].getObjectId())}">${cmis_objects[idx].getTitle()}</a>
+    <!-- application/vnd.excel -->
+    <a py:when="cmis_objects[idx].getProperties()['cmis:contentStreamMimeType'] == 'application/vnd.excel'" class="file excel" href="${href.documents(cmis_objects[idx].getObjectId())}">${cmis_objects[idx].getTitle()}</a>
+    <!-- image/png -->
+    <a py:when="cmis_objects[idx].getProperties()['cmis:contentStreamMimeType'] == 'image/png'" class="file png" href="${href.documents(cmis_objects[idx].getObjectId())}">${cmis_objects[idx].getTitle()}</a>
+    <!-- text/xml -->
+    <a py:when="cmis_objects[idx].getProperties()['cmis:contentStreamMimeType'] == 'text/xml'" class="file xml" href="${href.documents(cmis_objects[idx].getObjectId())}">${cmis_objects[idx].getTitle()}</a>
+    <!-- image/jpeg -->
+    <a py:when="cmis_objects[idx].getProperties()['cmis:contentStreamMimeType'] == 'image/jpeg'" class="file jpeg" href="${href.documents(cmis_objects[idx].getObjectId())}">${cmis_objects[idx].getTitle()}</a>
+    <a py:otherwise="" class="file unknown" href="${href.documents(cmis_objects[idx].getObjectId())}">${cmis_objects[idx].getTitle()}</a>
+  </td>
+  <td class="size">${pretty_size(cmis_objects[idx].getProperties()['cmis:contentStreamLength'])}</td>
+  <td class="date">${cmis_objects[idx].getProperties()['cmis:creationDate']}</td>
+  <td class="date">${cmis_objects[idx].getProperties()['cmis:lastModificationDate']}</td>
+  <td class="creator">${cmis_objects[idx].getProperties()['cmis:createdBy']}</td>
+</html>

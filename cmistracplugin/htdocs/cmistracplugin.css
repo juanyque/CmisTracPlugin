@@ -1,0 +1,43 @@
+/*
+ * CMIS Trac Plugin
+ * Copyright (C) 2009-2011 klicap - ingeniería del puzle
+ *
+ * $Id: cmistracplugin.css 126 2011-06-18 09:52:19Z recena $
+ */
+table.listing tbody td {
+    white-space: nowrap;
+}
+
+table.listing tbody td.creator {
+    width: 100%;
+    text-align: left;
+}
+
+table.listing tbody td a.file {
+    display: block !important;
+    line-height: 16px;
+}
+
+table.listing tbody td a.unknown {
+    background-image: url('file.png') !important;
+}
+
+table.listing tbody td a.pdf {
+    background-image: url('pdf.png') !important;
+}
+
+table.listing tbody td a.png {
+    background-image: url('png.png') !important;
+}
+
+table.listing tbody td a.excel {
+    background-image: url('excel.png') !important;
+}
+
+table.listing tbody td a.xml {
+    background-image: url('xml.png') !important;
+}
+
+table.listing tbody td a.jpeg {
+    background-image: url('jpeg.png') !important;
+}
