@@ -49,9 +49,10 @@ class CmisTracPlugin(Component):
     # IRequestHandler methods
 
     def match_request(self, req):
-        print "cmistracplugin: Check req.path_info: [" + req.path_info + "]"
+        #print "cmistracplugin: Check req.path_info: [" + req.path_info + "]"
         '''Check if applicable to this plugin'''
-        match = re.match('^(/documents)(/)?(workspace://SpacesStore/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?(/)?(newfolder|removefolder|renamefolder|upload|download|removedocument)?$', req.path_info)
+        match = re.match('^(/documents)(/)?(workspace://SpacesStore/)?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?(/)?(newfolder|removefolder|renamefolder|upload|download|removedocument)?$', req.path_info)
+        print "cmistracplugin: Check req.path_info: [" + req.path_info + "] match: [" + str(match) + "]"
         if match:
             if match.group(3) != None:
                 req.args['objectId'] = match.group(3)
