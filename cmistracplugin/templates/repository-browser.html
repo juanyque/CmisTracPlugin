@@ -22,7 +22,7 @@
               enableExpandDir(null, $("#dirlist tr"), null);
         });
       </script>
-      <py:if test="cmis_objectTypeId == 'cmis:folder'">
+      <py:if test="cmis_objectTypeId in ['cmis:folder', 'Folder', 'Section', 'Workspace']">
         <table class="listing" id="dirlist">
           <thead>
             <tr>
@@ -44,10 +44,10 @@
             <py:if test="len(cmis_objects) > 0">
               <py:for each="idx in range(len(cmis_objects))">
                 <tr class="${idx % 2 and 'even' or 'odd'}">
-                  <py:if test="cmis_objects[idx].getProperties()['cmis:objectTypeId'] == 'cmis:document'">
+                  <py:if test="cmis_objects[idx].getProperties()['cmis:objectTypeId'] in ['cmis:document', 'File']">
                     <xi:include href="document.html" />
                   </py:if>
-                  <py:if test="cmis_objects[idx].getProperties()['cmis:objectTypeId']=='cmis:folder'">
+                  <py:if test="cmis_objects[idx].getProperties()['cmis:objectTypeId'] in ['cmis:folder', 'Folder', 'Section', 'Workspace']">
                     <xi:include href="folder.html" />
                   </py:if>
                 </tr>
@@ -61,7 +61,7 @@
           </tbody>
         </table>
       </py:if>
-      <py:if test="cmis_objectTypeId == 'cmis:document'">
+      <py:if test="cmis_objectTypeId in ['cmis:document', 'File']">
         <table summary="Document info" id="info">
           <tbody>
             <tr>

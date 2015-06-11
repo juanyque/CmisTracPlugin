@@ -11,21 +11,25 @@ from cmislib.exceptions import CmisException, NotSupportedException
 
 def render_breadcrumb(cmis_client, repository, cmis_root_folder, cmis_object):
     breadcrumb = []
-    if cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:document':
+    if cmis_object.getProperties()['cmis:objectTypeId'] in ['cmis:document', 'File']:
         breadcrumb.append(cmis_object)
         result_set = get_object_parents(cmis_client, repository, cmis_object)
         cmis_object = result_set.getResults()[0]
-
-    if cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:folder':
+    elif cmis_object.getProperties()['cmis:objectTypeId'] in ['cmis:folder', 'Folder', 'Section', 'Workspace']:
         while cmis_object != None and cmis_object.getObjectId() != cmis_root_folder.getObjectId():
             breadcrumb.append(cmis_object)
             try:
                 cmis_object = cmis_object.getParent()
             except NotSupportedException:
                 cmis_object = None
+    else:
+        print "cmistracplugin: Unknow cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId']
+
     # Interesante forma de invertir una lista de forma recursiva. http://tinyurl.com/2v7ygrt
     #backwards = lambda l: (backwards (l[1:]) + l[:1] if l else [])
     #return backwards(breadcrumb)
+    print "cmis: len(breadcrumb): " + str(len(breadcrumb))
+    print "cmis: srt(breadcrumb): " + str(breadcrumb)
     breadcrumb.reverse()
 
     return breadcrumb

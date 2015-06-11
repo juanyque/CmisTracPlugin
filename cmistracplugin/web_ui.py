@@ -116,6 +116,9 @@ class CmisTracPlugin(Component):
                 else:
                     req.redirect(req.href.documents())
         else:
+            print "cmistracplugin: go to 'repository-browser.html'"
+            #self.env.log.debug
+            self.log.debug("cmistracplugin: go to 'repository-browser.html'")
             return 'repository-browser.html', self._render_cmis_object(req), None
 
     # ITemplateProvider methods
@@ -155,12 +158,24 @@ class CmisTracPlugin(Component):
 
         data = {}
         data['rootFolder'] = self.root_cmis_object
-        if cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:folder' || cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:Section':
+
+        print "p1: cmistracplugin: cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId']
+        #self.env.log.debug
+        self.log.debug("l: cmistracplugin: cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId'])
+
+        if cmis_object.getProperties()['cmis:objectTypeId'] in ['cmis:folder', 'Folder', 'Section', 'Workspace']:
+        #if cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:folder' || cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:Section':
             cmis_objects = cmis_object.getChildren().getResults()
             data['breadcrumb'] = render_breadcrumb(self.cmis_client, self.repository, self.root_cmis_object, cmis_object)
             if cmis_object.getObjectId() != self.root_cmis_object.getObjectId():
                 data['parentId'] = cmis_object.getProperties()['cmis:parentId']
             data['cmis_objectTypeId'] = 'cmis:folder'
+
+            print "cmistracplugin: cmis_objects: " + str(cmis_objects)
+            self.log.debug("cmistracplugin: cmis_objects: " + str(cmis_objects))
+            for idx in range(len(cmis_objects)):
+                print "-- cmistracplugin: cmis:objectTypeId: " + cmis_objects[idx].getProperties()['cmis:objectTypeId']
+
             data['cmis_objects'] = cmis_objects
             add_ctxtnav(req, tag.a('New folder', href=req.href.documents(cmis_object.getProperties()['cmis:objectId'], 'newfolder')))
             add_ctxtnav(req, tag.a('Remove folder', href=req.href.documents(cmis_object.getProperties()['cmis:objectId'], 'removefolder')))
@@ -170,8 +185,10 @@ class CmisTracPlugin(Component):
             data['breadcrumb'] = render_breadcrumb(self.cmis_client, self.repository, self.root_cmis_object, cmis_object)
             data['cmis_objectTypeId'] = 'cmis:document'
             data['cmis_object'] = cmis_object
-        else
-            print "cmisitracplugin: Unknow cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId']
+        else:
+            print "cmistracplugin: Unknow cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId']
+            #self.env.log.debug
+            self.log.debug("cmistracplugin: Unknow cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId'])
 
         if cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:folder' and xhr == None:
             req.session['lastCmisFolderIdVisited'] = cmis_object.getObjectId()
