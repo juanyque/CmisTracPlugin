@@ -2,6 +2,7 @@
 '''
  CMIS Trac Plugin
  Copyright (C) 2009-2011 klicap - ingeniería del puzle
+ Copyright (C) 2015 juanyque
 
  $Id$
 '''

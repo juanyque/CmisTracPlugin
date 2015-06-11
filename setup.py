@@ -2,19 +2,20 @@
 #
 # CMIS Trac Plugin
 # Copyright (C) 2009-2011 klicap - ingeniería del puzle
+# Copyright (C) 2015 juanyque
 #
-# $Id: setup.py 132 2011-06-20 20:30:15Z recena $
+# $Id: setup.py 133 2015-06-11 10:00:00Z juanyque $
 #
 from setuptools import setup, find_packages
 
 setup(
     name='CmisTracPlugin',
-    version='1.1-dev',
+    version='1.2.0',
     packages=find_packages(),
-    author='klicap - ingenieria del puzle, S.L.',
-    author_email='hello@klicap.es',
+    author='juanyque',
+    author_email='juan.mobilife@gmail.com',
     description='Integra una solucion ECM a traves de CMIS',
-    url='http://clinker.klicap.es/projects/alfrescointegration',
+    url='https://github.com/juanyque/CmisTracPlugin',
     license='GNU GPL v3',
     entry_points = {
         'trac.plugins': [

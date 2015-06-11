@@ -2,8 +2,9 @@
 '''
  CMIS Trac Plugin
  Copyright (C) 2009-2011 klicap - ingeniería del puzle
+ Copyright (C) 2015 juanyque
 
- $Id: web_ui.py 126 2011-06-18 09:52:19Z recena $
+ $Id: web_ui.py 133 2015-06-11 10:00:00Z juanyque $
 '''
 from genshi.builder import tag
 from trac.core import *
@@ -154,7 +155,7 @@ class CmisTracPlugin(Component):
 
         data = {}
         data['rootFolder'] = self.root_cmis_object
-        if cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:folder':
+        if cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:folder' || cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:Section':
             cmis_objects = cmis_object.getChildren().getResults()
             data['breadcrumb'] = render_breadcrumb(self.cmis_client, self.repository, self.root_cmis_object, cmis_object)
             if cmis_object.getObjectId() != self.root_cmis_object.getObjectId():
@@ -169,6 +170,8 @@ class CmisTracPlugin(Component):
             data['breadcrumb'] = render_breadcrumb(self.cmis_client, self.repository, self.root_cmis_object, cmis_object)
             data['cmis_objectTypeId'] = 'cmis:document'
             data['cmis_object'] = cmis_object
+        else
+            print "cmisitracplugin: Unknow cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId']
 
         if cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:folder' and xhr == None:
             req.session['lastCmisFolderIdVisited'] = cmis_object.getObjectId()
