@@ -21,24 +21,30 @@ table.listing tbody td a.file {
 
 table.listing tbody td a.unknown {
     background-image: url('file.png') !important;
+    background-repeat: no-repeat;
 }
 
 table.listing tbody td a.pdf {
     background-image: url('pdf.png') !important;
+    background-repeat: no-repeat;
 }
 
 table.listing tbody td a.png {
     background-image: url('png.png') !important;
+    background-repeat: no-repeat;
 }
 
 table.listing tbody td a.excel {
     background-image: url('excel.png') !important;
+    background-repeat: no-repeat;
 }
 
 table.listing tbody td a.xml {
     background-image: url('xml.png') !important;
+    background-repeat: no-repeat;
 }
 
 table.listing tbody td a.jpeg {
     background-image: url('jpeg.png') !important;
+    background-repeat: no-repeat;
 }
