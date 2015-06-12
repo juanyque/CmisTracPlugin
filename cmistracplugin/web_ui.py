@@ -54,10 +54,10 @@ class CmisTracPlugin(Component):
         match = re.match('^(/documents)(/)?(workspace://SpacesStore/)?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?(/)?(newfolder|removefolder|renamefolder|upload|download|removedocument)?$', req.path_info)
         print "cmistracplugin: Check req.path_info: [" + req.path_info + "] match: [" + str(match) + "]"
         if match:
-            if match.group(3) != None:
-                req.args['objectId'] = match.group(3)
-            if match.group(5) != None:
-                req.args['op'] = match.group(5)
+            if match.group(4) != None:
+                req.args['objectId'] = match.group(4)
+            if match.group(6) != None:
+                req.args['op'] = match.group(6)
             return True
         else:
             return False
@@ -154,6 +154,8 @@ class CmisTracPlugin(Component):
 
     def _render_cmis_object(self, req, xhr = None):
         if 'objectId' in req.args:
+            print "cmis: get object: [" + str(req.args['objectId']) + "]"
+            self.log.debug("cmis: get object: [" + str(req.args['objectId']) + "]")
             cmis_object = self.repository.getObject(req.args['objectId'])
         else:
             cmis_object = self.root_cmis_object
@@ -173,11 +175,12 @@ class CmisTracPlugin(Component):
                 data['parentId'] = cmis_object.getProperties()['cmis:parentId']
             data['cmis_objectTypeId'] = 'cmis:folder'
 
-            print "cmistracplugin: cmis_objects: " + str(cmis_objects)
-            self.log.debug("cmistracplugin: cmis_objects: " + str(cmis_objects))
+            print "cmistracplugin: len(cmis_objects): " + str(len(cmis_objects))
+            self.log.debug("cmistracplugin: len(cmis_objects): " + str(len(cmis_objects)))
             for idx in range(len(cmis_objects)):
                 print "-- cmistracplugin: cmis:objectTypeId: " + cmis_objects[idx].getProperties()['cmis:objectTypeId']
-
+                for propIDX in range(len(cmis_objects[idx].getProperties().keys())):
+                    print "--- cmistracplugin: cmis_objects[idx].getProperties()[" + str(propIDX) + ":" + cmis_objects[idx].getProperties().keys()[propIDX] + "]: " + str(cmis_objects[idx].getProperties()[cmis_objects[idx].getProperties().keys()[propIDX]])
             data['cmis_objects'] = cmis_objects
             add_ctxtnav(req, tag.a('New folder', href=req.href.documents(cmis_object.getProperties()['cmis:objectId'], 'newfolder')))
             add_ctxtnav(req, tag.a('Remove folder', href=req.href.documents(cmis_object.getProperties()['cmis:objectId'], 'removefolder')))
