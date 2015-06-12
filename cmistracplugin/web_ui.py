@@ -159,7 +159,7 @@ class CmisTracPlugin(Component):
         data = {}
         data['rootFolder'] = self.root_cmis_object
 
-        selt._print("p1: cmistracplugin: cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId'])
+        self._print("p1: cmistracplugin: cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId'])
 
         if cmis_object.getProperties()['cmis:objectTypeId'] in ['cmis:folder', 'Folder', 'Section', 'Workspace']:
         #if cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:folder' || cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:Section':
@@ -315,9 +315,9 @@ class CmisTracPlugin(Component):
 
     def _printCmisObjetc(self, cmis_object):
         self._print("-- cmis:objectTypeId :: [" + cmis_object.getProperties()['cmis:objectTypeId'] + "] -- cmis:objectId :: [" + cmis_object.getProperties()['cmis:objectId'] + "]")
-        _keys = cmis_object.getProperties().keys()
-        for propIDX in range(len(_keys)):
-            self._print("--- " + str(propIDX) + ":  cmis_object.getProperties()['" + _keys[propIDX] + "'] :: " + str(cmis_object.getProperties()[_keys[propIDX]]))
+        _props = cmis_object.getProperties()
+        for _key in _props:
+            self._print("---  cmis_object.getProperties()['" + _key + "'] :: " + str(_props[_key]))
 
     def _print(self, _str):
         print _str
