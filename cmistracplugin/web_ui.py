@@ -49,10 +49,9 @@ class CmisTracPlugin(Component):
     # IRequestHandler methods
 
     def match_request(self, req):
-        #print "cmistracplugin: Check req.path_info: [" + req.path_info + "]"
         '''Check if applicable to this plugin'''
         match = re.match('^(/documents)(/)?(workspace://SpacesStore/)?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?(/)?(newfolder|removefolder|renamefolder|upload|download|removedocument)?$', req.path_info)
-        print "cmistracplugin: Check req.path_info: [" + req.path_info + "] match: [" + str(match) + "]"
+        self._print("cmistracplugin: Check req.path_info: [" + req.path_info + "] match: [" + ("true" if match else "false") + "]")
         if match:
             if match.group(4) != None:
                 req.args['objectId'] = match.group(4)
@@ -118,9 +117,7 @@ class CmisTracPlugin(Component):
                 else:
                     req.redirect(req.href.documents())
         else:
-            print "cmistracplugin: go to 'repository-browser.html'"
-            #self.env.log.debug
-            self.log.debug("cmistracplugin: go to 'repository-browser.html'")
+            self._print("cmistracplugin: go to 'repository-browser.html'")
             return 'repository-browser.html', self._render_cmis_object(req), None
 
     # ITemplateProvider methods
@@ -154,8 +151,7 @@ class CmisTracPlugin(Component):
 
     def _render_cmis_object(self, req, xhr = None):
         if 'objectId' in req.args:
-            print "cmis: get object: [" + str(req.args['objectId']) + "]"
-            self.log.debug("cmis: get object: [" + str(req.args['objectId']) + "]")
+            selt._print("cmis: get object: [" + str(req.args['objectId']) + "]")
             cmis_object = self.repository.getObject(req.args['objectId'])
         else:
             cmis_object = self.root_cmis_object
@@ -163,9 +159,7 @@ class CmisTracPlugin(Component):
         data = {}
         data['rootFolder'] = self.root_cmis_object
 
-        print "p1: cmistracplugin: cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId']
-        #self.env.log.debug
-        self.log.debug("l: cmistracplugin: cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId'])
+        selt._print("p1: cmistracplugin: cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId'])
 
         if cmis_object.getProperties()['cmis:objectTypeId'] in ['cmis:folder', 'Folder', 'Section', 'Workspace']:
         #if cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:folder' || cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:Section':
@@ -175,12 +169,10 @@ class CmisTracPlugin(Component):
                 data['parentId'] = cmis_object.getProperties()['cmis:parentId']
             data['cmis_objectTypeId'] = 'cmis:folder'
 
-            print "cmistracplugin: len(cmis_objects): " + str(len(cmis_objects))
-            self.log.debug("cmistracplugin: len(cmis_objects): " + str(len(cmis_objects)))
+            self._print("cmistracplugin: len(cmis_object.getChildren().getResults()): " + str(len(cmis_objects)))
             for idx in range(len(cmis_objects)):
-                print "-- cmistracplugin: cmis:objectTypeId: " + cmis_objects[idx].getProperties()['cmis:objectTypeId']
-                for propIDX in range(len(cmis_objects[idx].getProperties().keys())):
-                    print "--- cmistracplugin: cmis_objects[idx].getProperties()[" + str(propIDX) + ":" + cmis_objects[idx].getProperties().keys()[propIDX] + "]: " + str(cmis_objects[idx].getProperties()[cmis_objects[idx].getProperties().keys()[propIDX]])
+                self._printCmisObjetc(cmis_objects[idx])
+
             data['cmis_objects'] = cmis_objects
             add_ctxtnav(req, tag.a('New folder', href=req.href.documents(cmis_object.getProperties()['cmis:objectId'], 'newfolder')))
             add_ctxtnav(req, tag.a('Remove folder', href=req.href.documents(cmis_object.getProperties()['cmis:objectId'], 'removefolder')))
@@ -191,9 +183,8 @@ class CmisTracPlugin(Component):
             data['cmis_objectTypeId'] = 'cmis:document'
             data['cmis_object'] = cmis_object
         else:
-            print "cmistracplugin: Unknow cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId']
-            #self.env.log.debug
-            self.log.debug("cmistracplugin: Unknow cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId'])
+            self._print("cmistracplugin: Unknow cmis:objectTypeId: " + cmis_object.getProperties()['cmis:objectTypeId'])
+            self._printCmisObjetc(cmis_object)
 
         if cmis_object.getProperties()['cmis:objectTypeId'] == 'cmis:folder' and xhr == None:
             req.session['lastCmisFolderIdVisited'] = cmis_object.getObjectId()
@@ -321,3 +312,14 @@ class CmisTracPlugin(Component):
             cmis_object = self.repository.getObject(req.args['objectId'])
             cmis_object.delete()
         self.log.info('A document has been removed')
+
+    def _printCmisObjetc(self, cmis_object):
+        self._print("-- cmis:objectTypeId :: [" + cmis_object.getProperties()['cmis:objectTypeId'] + "] -- cmis:objectId :: [" + cmis_object.getProperties()['cmis:objectId'] + "]")
+        _keys = cmis_object.getProperties().keys()
+        for propIDX in range(len(_keys)):
+            self._print("--- " + str(propIDX) + ":  cmis_object.getProperties()['" + _keys[propIDX] + "'] :: " + str(cmis_object.getProperties()[_keys[propIDX]]))
+
+    def _print(self, _str):
+        print _str
+        self.log.debug(_str)
+
